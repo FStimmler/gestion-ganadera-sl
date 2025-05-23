@@ -1,4 +1,3 @@
-version: '3'
 services:
   server:
     build: ./server
@@ -18,11 +17,10 @@ services:
       - server
   mongo:
     image: mongo:6
-    restart: always
     ports:
       - "27017:27017"
     volumes:
       - mongo-data:/data/db
-
+    command: ["mongod", "--bind_ip_all", "--nounixsocket"]
 volumes:
   mongo-data:

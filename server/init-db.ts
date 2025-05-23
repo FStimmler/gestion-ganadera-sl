@@ -1,16 +1,27 @@
 // server/init-db.ts
 import { connectToDatabase } from './mongo';
-import { generateMockZones } from './mock-data';
+import { generateMockZones, generateMockCattle,Zone } from './mock-data';
 
 export async function initDatabase() {
   const db = await connectToDatabase();
-  const usersCollection = db.collection('zones');
+  let zones:Zone[] = generateMockZones();
+  const zonesCollection = db.collection('zones');
+  const cattleCollection = db.collection('cattle');
 
-  const count = await usersCollection.countDocuments();
+  let count = await zonesCollection.countDocuments();
   if (count === 0) {
-    console.log('📥 Insertando datos mock en MongoDB...');
-    await usersCollection.insertMany(generateMockZones());
-    console.log('✅ Datos mock insertados');
+    console.log('📥 Insertando datos mock zonas en MongoDB...');
+    await zonesCollection.insertMany(zones);
+    console.log('✅ Datos mock zonas insertados');
+  } else {
+    console.log('ℹ️ Datos ya existentes, no se insertan duplicados.');
+  }
+
+  count = await cattleCollection.countDocuments();
+  if (count === 0) {
+    console.log('📥 Insertando datos mock ganado en MongoDB...');
+    await cattleCollection.insertMany(generateMockCattle(zones));
+    console.log('✅ Datos mock ganado insertados');
   } else {
     console.log('ℹ️ Datos ya existentes, no se insertan duplicados.');
   }

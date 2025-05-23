@@ -10,7 +10,7 @@ export async function connectToDatabase() {
   if (!db) {
     try {
       await client.connect();
-      db = client.db('mydatabase'); // Cambia el nombre si deseas
+      db = client.db('livestock-management'); 
       console.log('✅ Conectado a MongoDB');
     } catch (error) {
       console.error('❌ Error conectando a MongoDB:', error);

@@ -18,6 +18,12 @@ app.get('/api/zones', async (_req, res) => {
   res.json(zones);
 });
 
+app.get('/api/cattle', async (_req, res) => {
+  const db = await connectToDatabase();
+  const zones = await db.collection('cattle').find().toArray();
+  res.json(zones);
+});
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });

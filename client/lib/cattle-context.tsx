@@ -2,7 +2,6 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import { useToast } from "@/hooks/use-toast"
-import { generateMockCattle, generateMockZones } from "@/lib/mock-data"
 import { useAuth } from "@/lib/auth-context"
 
 export interface Cattle {
@@ -42,6 +41,12 @@ async function loadZones() {
     return mockZones
 }
 
+async function loadCattle() {
+    const res = await fetch('http://localhost:4000/api/cattle');
+    const mockCattle = await res.json();
+    return mockCattle
+}
+
 export function CattleProvider({ children }: { children: ReactNode }) {
   const [cattle, setCattle] = useState<Cattle[]>([])
   const [zones, setZones] = useState<Zone[]>([])
@@ -54,10 +59,12 @@ export function CattleProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     async function fetchData() {
-      const [zonesData] = await Promise.all([
-        loadZones()
+      const [zonesData,cattleData] = await Promise.all([
+        loadZones(),
+        loadCattle()
       ]);
       setZones(zonesData);
+      setCattle(cattleData);
     }
 
     fetchData();
@@ -72,10 +79,10 @@ export function CattleProvider({ children }: { children: ReactNode }) {
 
     if(zones){
 
-      const mockCattle = generateMockCattle(zones)
+      //const mockCattle = generateMockCattle(zones)
 
       //setZones(mockZones)
-      setCattle(mockCattle)
+      //setCattle(mockCattle)
       setLoading(false)
 
       // Reproducir sonido de bienvenida
